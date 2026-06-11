@@ -1,0 +1,80 @@
+import type { ReactNode } from "react";
+
+export function AuthLayout({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex min-h-dvh">
+      {/* LEFT PANEL */}
+      <aside
+        className="relative hidden w-2/5 flex-col justify-between overflow-hidden bg-primary p-10 text-primary-foreground md:flex"
+        aria-hidden="true"
+      >
+        {/* dot grid pattern */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-25"
+          style={{
+            backgroundImage:
+              "radial-gradient(rgba(255,255,255,0.35) 1px, transparent 1px)",
+            backgroundSize: "22px 22px",
+          }}
+        />
+        <div
+          className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full opacity-30"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(0,163,224,0.6) 0%, transparent 70%)",
+          }}
+        />
+
+        <div className="relative flex items-center gap-2">
+          <JabilMark className="h-8 w-8" />
+          <span className="text-lg font-bold tracking-tight">JABIL</span>
+        </div>
+
+        <div className="relative max-w-md">
+          <h1 className="text-5xl font-extrabold tracking-tight leading-[1.05]">
+            Jabil Forms
+          </h1>
+          <p className="mt-4 text-lg text-white/80">
+            Operational forms for a global workforce.
+          </p>
+        </div>
+
+        <p className="relative text-xs text-white/60">
+          © 2025 Jabil Inc. Internal use only.
+        </p>
+      </aside>
+
+      {/* RIGHT PANEL */}
+      <main className="flex w-full flex-col md:w-3/5">
+        {/* Mobile header */}
+        <div className="flex items-center gap-2 bg-primary px-6 py-4 text-primary-foreground md:hidden">
+          <JabilMark className="h-6 w-6" />
+          <span className="text-sm font-bold tracking-tight">
+            JABIL <span className="font-medium text-white/80">Forms</span>
+          </span>
+        </div>
+
+        <div className="flex flex-1 items-center justify-center px-6 py-12">
+          <div className="w-full max-w-[420px] animate-fade-up rounded-xl bg-card p-8 shadow-[0_8px_40px_-12px_rgba(0,71,186,0.18)]">
+            <div className="mb-6 text-sm font-bold tracking-tight text-primary">
+              Jabil Forms
+            </div>
+            {children}
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function JabilMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 32 32" className={className} fill="none">
+      <rect width="32" height="32" rx="6" fill="white" />
+      <path
+        d="M9 8h4v11.5a4.5 4.5 0 1 1-9 0V18h4v1.5a.5.5 0 0 0 1 0V8Zm9 0h4v16h-4V8Zm6 0h4v16h-4V8Z"
+        fill="#0047BA"
+      />
+    </svg>
+  );
+}
