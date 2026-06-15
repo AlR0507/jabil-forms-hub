@@ -25,10 +25,6 @@ export function AuthLayout({ children }: { children: ReactNode }) {
           }}
         />
 
-        <div className="relative flex items-center gap-2">
-          <JabilMark className="h-8 w-8" />
-          <span className="text-lg font-bold tracking-tight">JABIL</span>
-        </div>
 
         <div className="relative max-w-md">
           <h1 className="text-5xl font-extrabold tracking-tight leading-[1.05]">
@@ -46,16 +42,9 @@ export function AuthLayout({ children }: { children: ReactNode }) {
 
       {/* RIGHT PANEL */}
       <main className="flex w-full flex-col md:w-3/5">
-        {/* Mobile header */}
-        <div className="flex items-center gap-2 bg-primary px-6 py-4 text-primary-foreground md:hidden">
-          <JabilMark className="h-6 w-6" />
-          <span className="text-sm font-bold tracking-tight">
-            JABIL <span className="font-medium text-white/80">Forms</span>
-          </span>
-        </div>
 
         <div className="flex flex-1 items-center justify-center px-6 py-12">
-          <div className="w-full max-w-[420px] animate-fade-up rounded-xl bg-card p-8 shadow-[0_8px_40px_-12px_rgba(0,71,186,0.18)]">
+          <div className="w-full max-w-[420px] animate-fade-up rounded-xl bg-card p-8 shadow-[0_8px_40px_-12px_rgba(0,54,92,0.18)]">
             <div className="mb-6 text-sm font-bold tracking-tight text-primary">
               Jabil Forms
             </div>
@@ -67,14 +56,3 @@ export function AuthLayout({ children }: { children: ReactNode }) {
   );
 }
 
-function JabilMark({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 32 32" className={className} fill="none">
-      <rect width="32" height="32" rx="6" fill="white" />
-      <path
-        d="M9 8h4v11.5a4.5 4.5 0 1 1-9 0V18h4v1.5a.5.5 0 0 0 1 0V8Zm9 0h4v16h-4V8Zm6 0h4v16h-4V8Z"
-        fill="#0047BA"
-      />
-    </svg>
-  );
-}
