@@ -73,7 +73,7 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.22 0.018 265);
 
-  --primary: oklch(0.45 0.20 258);                 /* #0047BA Jabil Blue */
+  --primary: #00365C;                              /* Jabil Blue */
   --primary-foreground: oklch(1 0 0);
 
   --accent: oklch(0.70 0.15 232);                  /* #00A3E0 cyan-blue */
@@ -93,16 +93,16 @@
 
   --border: oklch(0.92 0.008 250);
   --input: oklch(0.92 0.008 250);
-  --ring: oklch(0.45 0.20 258);
+  --ring: #00365C;
 
   --sidebar: oklch(1 0 0);
   --sidebar-foreground: oklch(0.22 0.018 265);
-  --sidebar-primary: oklch(0.45 0.20 258);
+  --sidebar-primary: #00365C;
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.96 0.008 250);
   --sidebar-accent-foreground: oklch(0.22 0.018 265);
   --sidebar-border: oklch(0.92 0.008 250);
-  --sidebar-ring: oklch(0.45 0.20 258);
+  --sidebar-ring: #00365C;
 }
 
 @layer base {
