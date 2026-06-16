@@ -34,7 +34,6 @@ const FORMS = [
 function DashboardPage() {
   const { user, isAuthenticated, signOut } = useAuth();
   const navigate = useNavigate();
-  const [, /* sidebarOpen, setSidebarOpen */] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<typeof TABS[number]>("Recent");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -68,14 +67,6 @@ function DashboardPage() {
     <div className="flex min-h-dvh flex-col bg-background">
       {/* TOP NAVBAR */}
       <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-card px-4 lg:px-6">
-        <button
-          aria-label="Toggle sidebar"
-          onClick={() => setSidebarOpen((s) => !s)}
-          className="rounded-md p-2 hover:bg-secondary lg:hidden"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
-
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
             <FileText className="h-4 w-4 text-primary-foreground" />
@@ -141,185 +132,150 @@ function DashboardPage() {
         </div>
       </header>
 
-      <div className="flex flex-1">
-        {/* SIDEBAR */}
-        <aside
-          className={`${sidebarOpen ? "w-60" : "w-16"} hidden shrink-0 border-r border-border bg-card transition-all duration-200 lg:block`}
-        >
-          <nav className="flex flex-col gap-1 p-3">
-            {[
-              { icon: Home, label: "Home", active: true },
-              { icon: ClipboardList, label: "Forms" },
-              { icon: Inbox, label: "Approvals" },
-              { icon: BarChart3, label: "Analytics" },
-              { icon: Users, label: "Team" },
-              { icon: SettingsIcon, label: "Settings" },
-            ].map(({ icon: Icon, label, active }) => (
-              <button
-                key={label}
-                onClick={() => !active && toast.info(`${label} coming soon`)}
-                className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                  active ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                }`}
-              >
-                <Icon className="h-4 w-4 shrink-0" />
-                {sidebarOpen && <span>{label}</span>}
-              </button>
-            ))}
-          </nav>
-          <button
-            onClick={() => setSidebarOpen((s) => !s)}
-            className="mx-3 mt-2 hidden w-[calc(100%-1.5rem)] rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-secondary lg:block"
-          >
-            {sidebarOpen ? "Collapse" : "Expand"}
-          </button>
-        </aside>
+      {/* MAIN */}
+      <main className="flex-1 overflow-x-auto px-4 py-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
 
-        {/* MAIN */}
-        <main className="flex-1 overflow-x-auto px-4 py-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-
-            {/* 1. Greeting */}
-            <div className="mb-6">
-              <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-                {greeting}, {firstName}
-              </h1>
-              <p className="mt-1 text-sm text-muted-foreground">{today}</p>
-            </div>
-
-            {/* 2. Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3">
-              <Button onClick={() => toast.success("New form created")}>
-                <Plus className="h-4 w-4 mr-1.5" /> New Form
-              </Button>
-              <Button variant="outline" onClick={() => toast.success("New quiz created")}>
-                <LayoutTemplate className="h-4 w-4 mr-1.5" /> New Quiz
-              </Button>
-              <Button variant="outline" onClick={() => toast.info("Import feature coming soon")}>
-                <Upload className="h-4 w-4 mr-1.5" /> Quick import
-              </Button>
-            </div>
-
-            {/* 3. Templates */}
-            <section className="mt-8">
-              <h2 className="mb-4 text-base font-semibold text-foreground">Explore templates</h2>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {TEMPLATES.map((t) => (
-                  <button
-                    key={t.title}
-                    onClick={() => toast.info(`Template "${t.title}" selected`)}
-                    className={`relative overflow-hidden rounded-xl bg-gradient-to-br ${t.gradient} p-5 text-left text-white shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md`}
-                  >
-                    <div className="relative z-10">
-                      <p className="text-sm font-semibold">{t.title}</p>
-                      <p className="mt-1 text-xs leading-relaxed opacity-90">{t.desc}</p>
-                    </div>
-                    {/* Decorative circle */}
-                    <div className="absolute -bottom-4 -right-4 h-24 w-24 rounded-full bg-white/10" />
-                  </button>
-                ))}
-              </div>
-            </section>
-
-            {/* 4. Stats */}
-            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <StatCard icon={FileText} label="Total Forms" value="248" tint="bg-primary/10 text-primary" />
-              <StatCard icon={Clock} label="Pending Approvals" value="12" tint="bg-amber-500/10 text-amber-600" />
-              <StatCard icon={CheckCircle2} label="Submitted Today" value="34" tint="bg-success/10 text-success" />
-              <StatCard icon={Workflow} label="Active Workflows" value="7" tint="bg-accent/10 text-accent" />
-            </div>
-
-            {/* 5. Tabs + Search */}
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-1 overflow-x-auto">
-                {TABS.map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => {
-                      setActiveTab(tab);
-                      if (tab !== "Recent") toast.info(`${tab} view coming soon`);
-                    }}
-                    className={`relative whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                      activeTab === tab
-                        ? "text-foreground"
-                        : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                    }`}
-                  >
-                    {tab === "Favorites" && <Star className="mr-1 inline h-3.5 w-3.5" />}
-                    {tab}
-                    {activeTab === tab && (
-                      <span className="absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-primary" />
-                    )}
-                  </button>
-                ))}
-              </div>
-
-              <div className="flex items-center gap-2">
-                <div className="relative">
-                  <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <input
-                    placeholder="Filter by keyword"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="h-9 w-56 rounded-md border border-input bg-background pl-8 pr-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-                  />
-                </div>
-                <button
-                  onClick={() => setViewMode("list")}
-                  className={`rounded-md p-2 ${viewMode === "list" ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary"}`}
-                  aria-label="List view"
-                >
-                  <List className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode("grid")}
-                  className={`rounded-md p-2 ${viewMode === "grid" ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary"}`}
-                  aria-label="Grid view"
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* 6. Forms Grid / List */}
-            <section className="mt-4">
-              {viewMode === "grid" ? (
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {filteredForms.map((form) => (
-                    <FormCard key={form.id} form={form} />
-                  ))}
-                </div>
-              ) : (
-                <div className="overflow-hidden rounded-xl border border-border bg-card">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead className="bg-secondary/50 text-xs uppercase tracking-wide text-muted-foreground">
-                        <tr>
-                          <th className="px-5 py-3 text-left font-medium">Form Name</th>
-                          <th className="px-5 py-3 text-left font-medium">Submitted By</th>
-                          <th className="px-5 py-3 text-left font-medium">Date</th>
-                          <th className="px-5 py-3 text-left font-medium">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-border">
-                        {filteredForms.map((r) => (
-                          <tr key={r.id} className="transition-colors hover:bg-secondary/40">
-                            <td className="px-5 py-3.5 font-medium">{r.name}</td>
-                            <td className="px-5 py-3.5 text-muted-foreground">{r.by}</td>
-                            <td className="px-5 py-3.5 text-muted-foreground">{r.date}</td>
-                            <td className="px-5 py-3.5"><StatusBadge status={r.status} /></td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-            </section>
-
+          {/* 1. Greeting */}
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              {greeting}, {firstName}
+            </h1>
+            <p className="mt-1 text-sm text-muted-foreground">{today}</p>
           </div>
-        </main>
-      </div>
+
+          {/* 2. Action Buttons */}
+          <div className="flex flex-wrap items-center gap-3">
+            <Button onClick={() => toast.success("New form created")}>
+              <Plus className="h-4 w-4 mr-1.5" /> New Form
+            </Button>
+            <Button variant="outline" onClick={() => toast.success("New quiz created")}>
+              <LayoutTemplate className="h-4 w-4 mr-1.5" /> New Quiz
+            </Button>
+            <Button variant="outline" onClick={() => toast.info("Import feature coming soon")}>
+              <Upload className="h-4 w-4 mr-1.5" /> Quick import
+            </Button>
+          </div>
+
+          {/* 3. Templates */}
+          <section className="mt-8">
+            <h2 className="mb-4 text-base font-semibold text-foreground">Explore templates</h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {TEMPLATES.map((t) => (
+                <button
+                  key={t.title}
+                  onClick={() => toast.info(`Template "${t.title}" selected`)}
+                  className={`relative overflow-hidden rounded-xl bg-gradient-to-br ${t.gradient} p-5 text-left text-white shadow-sm transition-transform hover:-translate-y-0.5 hover:shadow-md`}
+                >
+                  <div className="relative z-10">
+                    <p className="text-sm font-semibold">{t.title}</p>
+                    <p className="mt-1 text-xs leading-relaxed opacity-90">{t.desc}</p>
+                  </div>
+                  {/* Decorative circle */}
+                  <div className="absolute -bottom-4 -right-4 h-24 w-24 rounded-full bg-white/10" />
+                </button>
+              ))}
+            </div>
+          </section>
+
+          {/* 4. Stats */}
+          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <StatCard icon={FileText} label="Total Forms" value="248" tint="bg-primary/10 text-primary" />
+            <StatCard icon={Clock} label="Pending Approvals" value="12" tint="bg-amber-500/10 text-amber-600" />
+            <StatCard icon={CheckCircle2} label="Submitted Today" value="34" tint="bg-success/10 text-success" />
+            <StatCard icon={Workflow} label="Active Workflows" value="7" tint="bg-accent/10 text-accent" />
+          </div>
+
+          {/* 5. Tabs + Search */}
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-1 overflow-x-auto">
+              {TABS.map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => {
+                    setActiveTab(tab);
+                    if (tab !== "Recent") toast.info(`${tab} view coming soon`);
+                  }}
+                  className={`relative whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                    activeTab === tab
+                      ? "text-foreground"
+                      : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  }`}
+                >
+                  {tab === "Favorites" && <Star className="mr-1 inline h-3.5 w-3.5" />}
+                  {tab}
+                  {activeTab === tab && (
+                    <span className="absolute bottom-0 left-3 right-3 h-0.5 rounded-full bg-primary" />
+                  )}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  placeholder="Filter by keyword"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-9 w-56 rounded-md border border-input bg-background pl-8 pr-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                />
+              </div>
+              <button
+                onClick={() => setViewMode("list")}
+                className={`rounded-md p-2 ${viewMode === "list" ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary"}`}
+                aria-label="List view"
+              >
+                <List className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setViewMode("grid")}
+                className={`rounded-md p-2 ${viewMode === "grid" ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary"}`}
+                aria-label="Grid view"
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* 6. Forms Grid / List */}
+          <section className="mt-4">
+            {viewMode === "grid" ? (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredForms.map((form) => (
+                  <FormCard key={form.id} form={form} />
+                ))}
+              </div>
+            ) : (
+              <div className="overflow-hidden rounded-xl border border-border bg-card">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead className="bg-secondary/50 text-xs uppercase tracking-wide text-muted-foreground">
+                      <tr>
+                        <th className="px-5 py-3 text-left font-medium">Form Name</th>
+                        <th className="px-5 py-3 text-left font-medium">Submitted By</th>
+                        <th className="px-5 py-3 text-left font-medium">Date</th>
+                        <th className="px-5 py-3 text-left font-medium">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-border">
+                      {filteredForms.map((r) => (
+                        <tr key={r.id} className="transition-colors hover:bg-secondary/40">
+                          <td className="px-5 py-3.5 font-medium">{r.name}</td>
+                          <td className="px-5 py-3.5 text-muted-foreground">{r.by}</td>
+                          <td className="px-5 py-3.5 text-muted-foreground">{r.date}</td>
+                          <td className="px-5 py-3.5"><StatusBadge status={r.status} /></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </section>
+
+        </div>
+      </main>
     </div>
   );
 }
