@@ -1,9 +1,8 @@
 import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import {
-  Bell, ChevronDown, FileText, Home, BarChart3, Users, Settings as SettingsIcon,
-  CheckCircle2, Clock, Plus, Search, Menu, LogOut, User as UserIcon, ClipboardList,
-  Workflow, Inbox, LayoutTemplate, Upload, Star, List, LayoutGrid,
+  Bell, ChevronDown, FileText, CheckCircle2, Clock, Plus, Search, LogOut, User as UserIcon,
+  Workflow, LayoutTemplate, Upload, Star, List, LayoutGrid,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth-context";
