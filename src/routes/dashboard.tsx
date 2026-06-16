@@ -34,7 +34,7 @@ const FORMS = [
 function DashboardPage() {
   const { user, isAuthenticated, signOut } = useAuth();
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [, /* sidebarOpen, setSidebarOpen */] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<typeof TABS[number]>("Recent");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
