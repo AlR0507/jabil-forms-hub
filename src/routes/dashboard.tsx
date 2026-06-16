@@ -1,7 +1,7 @@
 import { createFileRoute, Navigate, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import {
-  Bell, ChevronDown, FileText, CheckCircle2, Clock, Plus, Search, LogOut, User as UserIcon,
+  Bell, ChevronDown, FileText, Settings as SettingsIcon, CheckCircle2, Clock, Plus, Search, LogOut, User as UserIcon,
   Workflow, LayoutTemplate, Upload, Star, List, LayoutGrid,
 } from "lucide-react";
 import { toast } from "sonner";
