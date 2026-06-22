@@ -1,0 +1,162 @@
+<div [class.animate-shake]="shake()">
+  <h2 class="auth-title">Create your account</h2>
+  <p class="auth-subtitle">Join your Jabil team on Jabil Forms</p>
+
+  <form (ngSubmit)="onSubmit()" class="auth-form" novalidate>
+    <!-- Full Name -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Full Name</mat-label>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="name"
+        name="name"
+        placeholder="Jane Smith"
+        autocomplete="name"
+      />
+      @if (errors().name) {
+        <mat-error>{{ errors().name }}</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Email -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Work Email</mat-label>
+      <input
+        matInput
+        type="email"
+        [(ngModel)]="email"
+        name="email"
+        placeholder="you@jabil.com"
+        autocomplete="email"
+      />
+      @if (errors().email) {
+        <mat-error>{{ errors().email }}</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Department -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Department</mat-label>
+      <mat-select [(ngModel)]="department" name="department">
+        <mat-option value="">Select department...</mat-option>
+        @for (dept of DEPARTMENTS; track dept) {
+          <mat-option [value]="dept">{{ dept }}</mat-option>
+        }
+      </mat-select>
+      @if (errors().department) {
+        <mat-error>{{ errors().department }}</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Password -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        [type]="showPassword ? 'text' : 'password'"
+        [(ngModel)]="password"
+        name="password"
+        autocomplete="new-password"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="togglePassword()"
+        [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+      >
+        <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if (errors().password) {
+        <mat-error>{{ errors().password }}</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Password Strength Indicator -->
+    @if (password) {
+      <div class="strength-indicator">
+        <div class="strength-bars">
+          <div
+            class="strength-bar"
+            [class.active]="strength.score >= 1"
+            [class.weak]="strength.score === 1"
+            [class.fair]="strength.score === 2"
+            [class.strong]="strength.score === 3"
+          ></div>
+          <div
+            class="strength-bar"
+            [class.active]="strength.score >= 2"
+            [class.fair]="strength.score === 2"
+            [class.strong]="strength.score === 3"
+          ></div>
+          <div
+            class="strength-bar"
+            [class.active]="strength.score >= 3"
+            [class.strong]="strength.score === 3"
+          ></div>
+        </div>
+        <p class="strength-text">
+          Strength: <span class="strength-label" [ngClass]="strength.colorClass">{{ strength.label }}</span>
+        </p>
+      </div>
+    }
+
+    <!-- Confirm Password -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Confirm Password</mat-label>
+      <input
+        matInput
+        [type]="showConfirm ? 'text' : 'password'"
+        [(ngModel)]="confirm"
+        name="confirm"
+        autocomplete="new-password"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="toggleConfirm()"
+        [attr.aria-label]="showConfirm ? 'Hide password' : 'Show password'"
+      >
+        <mat-icon>{{ showConfirm ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if (errors().confirm) {
+        <mat-error>{{ errors().confirm }}</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Agree Checkbox -->
+    <div class="checkbox-row">
+      <mat-checkbox [(ngModel)]="agree" name="agree" color="primary">
+        <span class="terms-text">
+          I agree to the
+          <a href="#" target="_blank" rel="noreferrer" class="link-inline">Terms of Service</a>
+          and
+          <a href="#" target="_blank" rel="noreferrer" class="link-inline">Privacy Policy</a>
+        </span>
+      </mat-checkbox>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      class="submit-btn"
+      [disabled]="!agree || loading()"
+    >
+      @if (loading()) {
+        <mat-spinner diameter="20" color="accent"></mat-spinner>
+      } @else {
+        Create Account
+      }
+    </button>
+  </form>
+
+  <!-- Sign In Link -->
+  <p class="switch-link">
+    Already have an account?
+    <a routerLink="/signin" class="link-primary">Sign In</a>
+  </p>
+</div>

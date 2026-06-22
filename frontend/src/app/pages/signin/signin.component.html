@@ -1,0 +1,98 @@
+<div [class.animate-shake]="shake()">
+  <h2 class="auth-title">Welcome back</h2>
+  <p class="auth-subtitle">Sign in to your Jabil account</p>
+
+  <form (ngSubmit)="onSubmit()" class="auth-form" novalidate>
+    <!-- Email -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Work Email</mat-label>
+      <input
+        matInput
+        type="email"
+        [(ngModel)]="email"
+        name="email"
+        placeholder="you@jabil.com"
+        autocomplete="email"
+      />
+      @if (errors().email) {
+        <mat-error>{{ errors().email }}</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Password -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        [type]="showPassword ? 'text' : 'password'"
+        [(ngModel)]="password"
+        name="password"
+        autocomplete="current-password"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="togglePassword()"
+        [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+      >
+        <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if (errors().password) {
+        <mat-error>{{ errors().password }}</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Remember + Forgot -->
+    <div class="form-row">
+      <mat-checkbox [(ngModel)]="remember" name="remember" color="primary">
+        Remember me
+      </mat-checkbox>
+      <a routerLink="/forgot-password" class="forgot-link">Forgot password?</a>
+    </div>
+
+    <!-- Submit -->
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      class="submit-btn"
+      [disabled]="loading()"
+    >
+      @if (loading()) {
+        <mat-spinner diameter="20" color="accent"></mat-spinner>
+      } @else {
+        Sign In
+      }
+    </button>
+  </form>
+
+  <!-- Divider -->
+  <div class="divider">
+    <span class="divider-line"></span>
+    <span class="divider-text">or</span>
+    <span class="divider-line"></span>
+  </div>
+
+  <!-- SSO -->
+  <button
+    mat-stroked-button
+    class="sso-btn"
+    type="button"
+    (click)="onSsoClick()"
+  >
+    <mat-icon>lock</mat-icon>
+    Continue with Jabil SSO
+  </button>
+
+  <!-- Sign Up Link -->
+  <p class="switch-link">
+    Don't have an account?
+    <a routerLink="/signup" class="link-primary">Create account</a>
+  </p>
+
+  <!-- Demo hint -->
+  <div class="demo-hint">
+    Demo: <code>demo&#64;jabil.com</code> / <code>Jabil2025</code>
+  </div>
+</div>

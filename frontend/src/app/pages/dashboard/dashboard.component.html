@@ -1,0 +1,275 @@
+<div class="dashboard-wrapper">
+  <!-- TOP NAVBAR -->
+  <header class="navbar">
+    <div class="navbar-left">
+      <div class="logo-container">
+        <mat-icon class="logo-icon">description</mat-icon>
+      </div>
+      <span class="logo-text">Jabil Forms</span>
+
+      <nav class="navbar-nav">
+        @for (item of ['Dashboard', 'My Forms', 'Templates', 'Reports']; track item; let idx = $index) {
+          <button
+            (click)="onNavClick(item)"
+            class="nav-btn"
+            [class.active]="idx === 0"
+          >
+            {{ item }}
+          </button>
+        }
+      </nav>
+    </div>
+
+    <div class="navbar-right">
+      <button
+        aria-label="Notifications"
+        (click)="onNotificationClick()"
+        class="icon-btn"
+      >
+        <mat-icon>notifications</mat-icon>
+        <span class="notification-badge"></span>
+      </button>
+
+      <div class="profile-menu-container">
+        <button [matMenuTriggerFor]="profileMenu" class="profile-trigger">
+          <div class="avatar-circle">
+            {{ userInitials }}
+          </div>
+          <mat-icon class="dropdown-chevron">keyboard_arrow_down</mat-icon>
+        </button>
+
+        <mat-menu #profileMenu="matMenu" xPosition="before" class="custom-profile-menu">
+          <div class="menu-header">
+            <p class="menu-user-name">{{ auth.user()?.name }}</p>
+            <p class="menu-user-email">{{ auth.user()?.email }}</p>
+          </div>
+          <button mat-menu-item (click)="onProfileClick()">
+            <mat-icon>person</mat-icon>
+            <span>Profile</span>
+          </button>
+          <button mat-menu-item (click)="onSettingsClick()">
+            <mat-icon>settings</mat-icon>
+            <span>Settings</span>
+          </button>
+          <div class="menu-divider"></div>
+          <button mat-menu-item (click)="signOut()" class="logout-item">
+            <mat-icon>logout</mat-icon>
+            <span>Sign Out</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="container-max">
+      <!-- 1. Greeting -->
+      <div class="greeting-section">
+        <h1 class="greeting-title">
+          {{ greeting }}, {{ firstName }}
+        </h1>
+        <p class="today-date">{{ todayFormatted }}</p>
+      </div>
+
+      <!-- 2. Action Buttons -->
+      <div class="actions-row">
+        <button mat-flat-button color="primary" (click)="onCreateForm()">
+          <mat-icon>add</mat-icon>
+          New Form
+        </button>
+        <button mat-stroked-button (click)="onCreateQuiz()">
+          <mat-icon>dashboard_customize</mat-icon>
+          New Quiz
+        </button>
+        <button mat-stroked-button (click)="onImport()">
+          <mat-icon>cloud_upload</mat-icon>
+          Quick import
+        </button>
+      </div>
+
+      <!-- 3. Templates Section -->
+      <section class="section-block">
+        <h2 class="section-title">Explore templates</h2>
+        <div class="templates-grid">
+          @for (temp of TEMPLATES; track temp.title) {
+            <button
+              (click)="onTemplateClick(temp.title)"
+              class="template-card"
+              [style.background]="temp.gradient"
+            >
+              <div class="template-content">
+                <p class="template-name">{{ temp.title }}</p>
+                <p class="template-desc">{{ temp.desc }}</p>
+              </div>
+              <div class="template-circle-decor"></div>
+            </button>
+          }
+        </div>
+      </section>
+
+      <!-- 4. Stats Summary -->
+      <div class="stats-row">
+        <!-- Card 1 -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Total Forms</span>
+            <div class="stat-icon-wrapper primary-tint">
+              <mat-icon>description</mat-icon>
+            </div>
+          </div>
+          <p class="stat-value">248</p>
+        </div>
+        <!-- Card 2 -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Pending Approvals</span>
+            <div class="stat-icon-wrapper warning-tint">
+              <mat-icon>pending_actions</mat-icon>
+            </div>
+          </div>
+          <p class="stat-value">12</p>
+        </div>
+        <!-- Card 3 -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Submitted Today</span>
+            <div class="stat-icon-wrapper success-tint">
+              <mat-icon>check_circle</mat-icon>
+            </div>
+          </div>
+          <p class="stat-value">34</p>
+        </div>
+        <!-- Card 4 -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-label">Active Workflows</span>
+            <div class="stat-icon-wrapper accent-tint">
+              <mat-icon>device_hub</mat-icon>
+            </div>
+          </div>
+          <p class="stat-value">7</p>
+        </div>
+      </div>
+
+      <!-- 5. Filtering + Search Bar -->
+      <div class="filter-search-row">
+        <!-- Tabs -->
+        <div class="tabs-list">
+          @for (tab of TABS; track tab) {
+            <button
+              (click)="onTabChange(tab)"
+              class="tab-btn"
+              [class.active]="activeTab() === tab"
+            >
+              @if (tab === 'Favorites') {
+                <mat-icon class="tab-star-icon">star</mat-icon>
+              }
+              {{ tab }}
+              @if (activeTab() === tab) {
+                <span class="active-tab-indicator"></span>
+              }
+            </button>
+          }
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-group">
+          <!-- Search box -->
+          <div class="search-box">
+            <mat-icon class="search-icon">search</mat-icon>
+            <input
+              type="text"
+              placeholder="Filter by keyword"
+              [ngModel]="searchQuery()"
+              (ngModelChange)="searchQuery.set($event)"
+              class="search-input"
+            />
+          </div>
+
+          <!-- View modes -->
+          <button
+            (click)="viewMode.set('list')"
+            class="mode-btn"
+            [class.active]="viewMode() === 'list'"
+            aria-label="List view"
+          >
+            <mat-icon>view_list</mat-icon>
+          </button>
+          <button
+            (click)="viewMode.set('grid')"
+            class="mode-btn"
+            [class.active]="viewMode() === 'grid'"
+            aria-label="Grid view"
+          >
+            <mat-icon>grid_view</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- 6. Forms Display -->
+      <section class="forms-section">
+        @if (viewMode() === 'grid') {
+          <div class="forms-grid">
+            @for (form of filteredForms; track form.id) {
+              <button
+                (click)="onFormClick(form.name)"
+                class="form-grid-card"
+              >
+                <div class="form-thumbnail">
+                  <mat-icon class="thumb-icon">insert_drive_file</mat-icon>
+                  <span
+                    class="status-indicator-dot"
+                    [class.pending]="form.status === 'Pending'"
+                    [class.approved]="form.status === 'Approved'"
+                    [class.rejected]="form.status === 'Rejected'"
+                  ></span>
+                </div>
+                <div class="form-card-details">
+                  <p class="form-card-name">{{ form.name }}</p>
+                  <p class="form-card-by">{{ form.by }}</p>
+                  <div class="form-card-footer">
+                    <span class="form-card-date">{{ form.date }}</span>
+                    <span class="form-card-responses">{{ form.responses }} responses</span>
+                  </div>
+                </div>
+              </button>
+            }
+          </div>
+        } @else {
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th class="th-name">Form Name</th>
+                  <th class="th-by">Submitted By</th>
+                  <th class="th-date">Date</th>
+                  <th class="th-status">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (form of filteredForms; track form.id) {
+                  <tr (click)="onFormClick(form.name)" class="table-row">
+                    <td class="td-name font-medium">{{ form.name }}</td>
+                    <td class="td-by">{{ form.by }}</td>
+                    <td class="td-date">{{ form.date }}</td>
+                    <td class="td-status">
+                      <span
+                        class="status-badge"
+                        [class.pending]="form.status === 'Pending'"
+                        [class.approved]="form.status === 'Approved'"
+                        [class.rejected]="form.status === 'Rejected'"
+                      >
+                        {{ form.status }}
+                      </span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </section>
+    </div>
+  </main>
+</div>
